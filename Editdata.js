@@ -1,191 +1,285 @@
-import React, { useState, useEffect } from 'react'
-import { SafeAreaView, View, TextInput, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { ScrollView } from 'react-native-virtualized-view';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faGraduationCap, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-
+import React, { useState, useEffect } from 'react';
+import {
+  SafeAreaView,
+  View,
+  TextInput,
+  Text,
+  Button,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import ImagePicker from 'react-native-image-picker';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 const Createdata = () => {
-  const jsonUrl = 'http://192.168.2.112:3000/mahasiswa'; // digunakan komputer untuk mengakses
-  const [first_name, setFirstName] = useState(''); // variabel firstname dengn useState untuk menyimpan data
-  const [last_name, setLastName] = useState('');
-  const [kelas, setKelas] = useState('');
-  const [gender, setGender] = useState('');
-  const [email, setEmail] = useState('');
+  const jsonUrl = 'http://10.55.103.68:3000/pelapor';
+  const [id, setId] = useState('');
+  const [name, setName] = useState('');
+  const [contact, setContact] = useState('');
+  const [location, setLocation] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [description, setDescription] = useState('');
+  const [photo, setPhoto] = useState(null);
   const [selectedUser, setSelectedUser] = useState({});
   const [isLoading, setLoading] = useState(true);
-  const [dataUser, setDataUser] = useState({});
+  const [dataUser, setDataUser] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-      fetch(jsonUrl)
-          .then((response) => response.json())
-          .then((json) => {
-              console.log(json)
-              setDataUser(json)
-          })
-          .catch((error) => console.error(error))
-          .finally(() => setLoading(false));
-  }, []);
-
-  function refreshPage() {
-      fetch(jsonUrl)
-          .then((response) => response.json())
-          .then((json) => {
-              console.log(json)
-              setDataUser(json)
-          })
-          .catch((error) => console.error(error))
-          .finally(() => setLoading(false));
-  }
-
-  const selectItem = (item) => {
-    setSelectedUser(item);
-    setFirstName(item.first_name);
-    setLastName(item.last_name);
-    setKelas(item.kelas);
-    setGender(item.gender);
-    setEmail(item.email);
-  }
-
-
-  const submit = () => {
-    const data = {
-      first_name: first_name,
-      last_name: last_name,
-      kelas: kelas,
-      gender: gender,
-      email: email,
-    };
-
-    fetch(`http://192.168.2.112:3000/mahasiswa/${selectedUser.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
+    fetch(jsonUrl)
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        alert('Data tersimpan');
-        setFirstName('');
-        setLastName('');
-        setKelas('');
-        setGender('');
-        setEmail('');
-        refreshPage();
-        FlatList.refresh();
+        setDataUser(json);
       })
-  }
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
+  };
+
+  const refreshPage = () => {
+    fetch(jsonUrl)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        setDataUser(json);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  };
+
+  const selectItem = (item) => {
+    setSelectedUser(item);
+    setName(item.name);
+    setContact(item.contact);
+    setLocation(item.location);
+    setLatitude(item.latitude);
+    setLongitude(item.longitude);
+    setDescription(item.description);
+    setPhoto(item.photo); // Set photo jika ada dalam data user
+  };
+
+  const submit = () => {
+    const data = {
+      name,
+      contact,
+      location,
+      latitude,
+      longitude,
+      description,
+      photo,
+    };
+
+    fetch(`http://10.55.103.68:3000/pelapor/${selectedUser.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        alert('Data berhasil diperbarui!');
+        setName('');
+        setContact('');
+        setLocation('');
+        setLatitude('');
+        setLongitude('');
+        setDescription('');
+        setPhoto(null);
+        refreshPage();
+      });
+  };
 
   return (
-    <SafeAreaView>
-      <View>
-        {isLoading ? (
-          <View style={{ alignItems: 'center', marginTop: 20 }}>
-            <Text style={styles.cardtitle}>Loading...</Text>
-          </View>
-        ) : (
-          <View>
-            
-              <View>
-                <Text style={styles.title}>Edit Data Mahasiswa</Text>
-                <View style={styles.form}>
-                  <TextInput placeholder="Nama Depan" value={first_name} onChangeText={(value) => setFirstName(value)} />
-                  <TextInput placeholder="Nama Belakang" value={last_name} onChangeText={(value) => setLastName(value)} />
-                  <TextInput placeholder="Kelas" value={kelas} onChangeText={(value) => setKelas(value)} />
-                  <TextInput placeholder="Jenis Kelamin" value={gender} onChangeText={(value) => setGender(value)} />
-                  <TextInput placeholder="Email" value={email} onChangeText={(value) => setEmail(value)} />
-                  <Button title="Edit" style={styles.button} onPress={submit} />
-                </View>
-              </View>
-              <View style={styles.devider}></View>
-              <ScrollView style={styles.form}>
-              <FlatList
-                style={{ marginBottom: 10 }}
-                data={dataUser}
-                onRefresh={() => { refreshPage() }}
-                refreshing={refresh}
-                keyExtractor={({ id }, index) => id}
-                renderItem={({ item }) => (
-                  <View>
-                    <TouchableOpacity onPress={() => selectItem(item)}>
-                      <View style={styles.card}>
-                        <View style={styles.avatar}>
-                          <FontAwesomeIcon icon={faGraduationCap} size={50} />
-                        </View>
-                        <View>
-                          <Text style={styles.cardtitle}>{item.first_name} {item.first_name}</Text>
-                          <Text>{item.kelas}</Text>
-                          <Text>{item.gender}</Text>
-                        </View>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
-                          <FontAwesomeIcon icon={faPenToSquare} size={20} />
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              />
-            </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <Image source={require('./assets/BG3.jpg')}  style={styles.backgroundImage} />
+
+      <Text style={styles.title}>Lihat dan Perbarui Laporan Anda!</Text>
+
+      <ScrollView style={styles.formContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Nama"
+          value={name}
+          onChangeText={(value) => setName(value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Kontak"
+          value={contact}
+          onChangeText={(value) => setContact(value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Lokasi"
+          value={location}
+          onChangeText={(value) => setLocation(value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Latitude"
+          value={latitude}
+          onChangeText={(value) => setLatitude(value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Longitude"
+          value={longitude}
+          onChangeText={(value) => setLongitude(value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Deskripsi"
+          value={description}
+          onChangeText={(value) => setDescription(value)}
+        />
+
+        <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
+          <Text style={styles.photoButtonText}>Pilih Foto</Text>
+        </TouchableOpacity>
+
+        {photo && (
+          <View style={styles.previewImageContainer}>
+            <Text style={styles.previewText}>Foto Terpilih:</Text>
+            <Image
+              source={{ uri: photo }}
+              style={styles.previewImage}
+            />
           </View>
         )}
+      </ScrollView>
+
+      <FlatList
+        style={styles.list}
+        data={dataUser}
+        keyExtractor={(item) => item.id.toString()}
+        refreshing={refresh}
+        onRefresh={refreshPage}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => selectItem(item)}>
+            <View style={styles.card}>
+              <FontAwesomeIcon icon={faTriangleExclamation} size={24} color="red" />
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>{item.name}</Text>
+                <Text>{item.contact}</Text>
+                <Text>{item.location}</Text>
+                <Text>
+                  {item.latitude}, {item.longitude}
+                </Text>
+                <Text>{item.description}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+
+      <View style={styles.submitButtonContainer}>
+        <Button title="Simpan Data" onPress={submit} />
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Createdata
+export default Createdata;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  backgroundImage: {
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: 'cover',
+    position: 'absolute',
+  },
   title: {
-    paddingVertical: 12,
-    backgroundColor: '#333',
-    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginVertical: 10,
+    color: '#333',
   },
-  form: {
-    padding: 10,
-    marginBottom: 10,
+  formContainer: {
+    padding: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#777',
+    borderColor: '#ddd',
     borderRadius: 8,
-    padding: 8,
-    width: '100%',
-    marginVertical: 5,
+    padding: 10,
+    marginBottom: 20,
+    backgroundColor: '#f9f9f9',
   },
-  button: {
-    marginVertical: 10,
+  photoButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  avatar: {
-    borderRadius: 100,
-    width: 80,
-},
-cardtitle: {
-    fontSize: 14,
+  photoButtonText: {
+    color: '#fff',
     fontWeight: 'bold',
-},
-card: {
+  },
+  previewImageContainer: {
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  previewText: {
+    marginBottom: 5,
+    fontWeight: 'bold',
+  },
+  previewImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+  },
+  list: {
+    marginTop: 10,
+  },
+  card: {
     flexDirection: 'row',
-    padding: 20,
+    padding: 15,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    backgroundColor: '#fff',
     borderRadius: 10,
-    backgroundColor: 'white',
     shadowColor: '#000',
-    shadowOffset: {
-        width: 1,
-        height: 1,
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-    elevation: 2,
-    marginHorizontal: 20,
-    marginVertical: 7
-}
-})
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    alignItems: 'center',
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  submitButtonContainer: {
+    margin: 20,
+  },
+});
