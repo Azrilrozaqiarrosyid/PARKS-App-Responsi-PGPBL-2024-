@@ -46,7 +46,7 @@ const Createdata = () => {
       photo: photo?.uri,
     };
 
-    fetch('http://10.55.103.108:3000/pelapor', {
+    fetch('http://192.168.178.21:3000/pelapor', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

@@ -84,11 +84,6 @@ const MainPage = ({ navigation }) => {
                 onPress={() => Linking.openURL('https://perhubungan.jogjakota.go.id/')}
               />
               <View style={styles.buttonSpacing} />
-              <Button
-                title="Pergi ke Halaman Peta"
-                onPress={() => navigation.navigate('Map')}
-                color="#841584"
-              />
             </View>
           </View>
         </ScrollView>

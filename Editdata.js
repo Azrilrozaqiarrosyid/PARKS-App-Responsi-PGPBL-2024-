@@ -10,13 +10,14 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
 } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import ImagePicker from 'react-native-image-picker';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 const Createdata = () => {
-  const jsonUrl = 'http://10.55.103.68:3000/pelapor';
+  const jsonUrl = 'http://192.168.178.21:3000/pelapor';
   const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
@@ -65,19 +66,43 @@ const Createdata = () => {
       .finally(() => setLoading(false));
   };
 
+  const deleteData = (id) => {
+    fetch(`${jsonUrl}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert('Data berhasil dihapus!');
+          refreshPage();
+        } else {
+          alert('Gagal menghapus data. Coba lagi!');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menghapus data.');
+      });
+  };
+
   const selectItem = (item) => {
     setSelectedUser(item);
+    setId(item.id);
     setName(item.name);
     setContact(item.contact);
     setLocation(item.location);
     setLatitude(item.latitude);
     setLongitude(item.longitude);
     setDescription(item.description);
-    setPhoto(item.photo); // Set photo jika ada dalam data user
+    setPhoto(item.photo);
   };
 
   const submit = () => {
     const data = {
+      id,
       name,
       contact,
       location,
@@ -87,7 +112,7 @@ const Createdata = () => {
       photo,
     };
 
-    fetch(`http://10.55.103.68:3000/pelapor/${selectedUser.id}`, {
+    fetch(`${jsonUrl}/${selectedUser.id}`, {
       method: 'PATCH',
       headers: {
         'Accept': 'application/json',
@@ -98,6 +123,7 @@ const Createdata = () => {
       .then((response) => response.json())
       .then(() => {
         alert('Data berhasil diperbarui!');
+        setId('');
         setName('');
         setContact('');
         setLocation('');
@@ -111,11 +137,17 @@ const Createdata = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('./assets/BG3.jpg')}  style={styles.backgroundImage} />
+      <Image source={require('./assets/BG3.jpg')} style={styles.backgroundImage} />
 
       <Text style={styles.title}>Lihat dan Perbarui Laporan Anda!</Text>
 
       <ScrollView style={styles.formContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="ID"
+          value={id}
+          onChangeText={(value) => setId(value)}
+        />
         <TextInput
           style={styles.input}
           placeholder="Nama"
@@ -179,6 +211,7 @@ const Createdata = () => {
             <View style={styles.card}>
               <FontAwesomeIcon icon={faTriangleExclamation} size={24} color="red" />
               <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>{item.id}</Text>
                 <Text style={styles.cardTitle}>{item.name}</Text>
                 <Text>{item.contact}</Text>
                 <Text>{item.location}</Text>
@@ -186,6 +219,16 @@ const Createdata = () => {
                   {item.latitude}, {item.longitude}
                 </Text>
                 <Text>{item.description}</Text>
+                <Button
+                  title="Hapus"
+                  color="red"
+                  onPress={() =>
+                    Alert.alert('Hapus Data', `Yakin ingin menghapus ${item.name}?`, [
+                      { text: 'Tidak', style: 'cancel' },
+                      { text: 'Ya', onPress: () => deleteData(item.id) },
+                    ])
+                  }
+                />
               </View>
             </View>
           </TouchableOpacity>

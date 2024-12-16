@@ -6,7 +6,7 @@ import { faGraduationCap, faChevronRight, faMapMarkerAlt } from '@fortawesome/fr
 import RNFS from 'react-native-fs';
 
 const Listdata = () => {
-    const jsonUrl = 'http://10.55.103.68:3000/pelapor';
+    const jsonUrl = 'http://192.168.178.21:3000/pelapor';
     const [isLoading, setLoading] = useState(true);
     const [dataUser, setDataUser] = useState([]);
     const [refresh, setRefresh] = useState(false);
