@@ -8,8 +8,8 @@ PARKS merupakan aplikasi yang dirancang sebagai platform pelaporan tindakan park
 ___
 # Komponen Pembangun Produk
 <img width="400" alt="React-native-2-logo" src="https://github.com/user-attachments/assets/a8b2a1c9-851d-4805-9445-d87812483295" />
-![leaflet-js](https://github.com/user-attachments/assets/4dc83b7a-3a2d-4ab2-b666-87db072b42d0)
-![Vercel_logo_black svg](https://github.com/user-attachments/assets/d47fc2d6-e742-4714-9ca4-8cc12a9fc761)
+![image](https://github.com/user-attachments/assets/f48cc516-0b06-42c1-82bc-041f88de5a3b)
+![images (3)](https://github.com/user-attachments/assets/8acf8802-8eed-4922-88db-5e19e3ffbbd7)
 <img width="400" alt="framework-og-img" src="https://github.com/user-attachments/assets/febe94cc-c3b0-427b-ae94-4ede3f37117e" />
 ___
 
