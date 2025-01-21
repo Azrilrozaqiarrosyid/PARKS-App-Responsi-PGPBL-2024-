@@ -12,6 +12,7 @@ ___
 ![Vercel_logo_black svg](https://github.com/user-attachments/assets/d47fc2d6-e742-4714-9ca4-8cc12a9fc761)
 <img width="400" alt="framework-og-img" src="https://github.com/user-attachments/assets/febe94cc-c3b0-427b-ae94-4ede3f37117e" />
 ___
+
 # Sumber Data
 Sumber data yang digunakan meliputi:
 1. Link berita terkait parkir di Kota Yogyakarta
