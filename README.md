@@ -18,6 +18,7 @@ Sumber data yang digunakan meliputi:
 2. Titik koordinat Google Maps untuk titik parkir resminya
 3. Foto tempat parkir dari mesin pencarian Google
 4. Pinterest untuk foto aplikasi
+
 ___
 # Tangkapan Layar Produk
 ___
