@@ -6,11 +6,13 @@ ___
 # Deskripsi Produk
 PARKS merupakan aplikasi yang dirancang sebagai platform pelaporan tindakan parkir liar berbasis android. Layanan yang ditawarkan meliputi bernada, pelaporan berupa lokasi, foto, dan koordinat, serta peta persebaran titik parkir resmi di Kota Yogyakarta. Aplikasi ini merupakan prototype sederhana untuk pengaduan parkir liar yang lebih lanjut diharapakan dapat dikembangkan dengan integrasi geolokasi serta database online.
 ___
+
 # Komponen Pembangun Produk
 <img width="400" alt="React-native-2-logo" src="https://github.com/user-attachments/assets/a8b2a1c9-851d-4805-9445-d87812483295" />
 ![image](https://github.com/user-attachments/assets/f48cc516-0b06-42c1-82bc-041f88de5a3b)
 ![images (3)](https://github.com/user-attachments/assets/8acf8802-8eed-4922-88db-5e19e3ffbbd7)
 <img width="400" alt="framework-og-img" src="https://github.com/user-attachments/assets/febe94cc-c3b0-427b-ae94-4ede3f37117e" />
+
 ___
 
 # Sumber Data
