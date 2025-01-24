@@ -46,6 +46,12 @@ ___
 ![image](https://github.com/user-attachments/assets/d28c8534-bf73-4e52-ad49-907449be1b45)
 ___
 
+___
+# Poster Produk
+___
+![POSTER_RESPONSI_PGPBL__AZRIL_21660](https://github.com/user-attachments/assets/8a08f781-da45-46c2-8bfd-5740943213a0)
+___
+
 
 
 
